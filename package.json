@@ -16,7 +16,9 @@
     "@ethersproject/bytes": "^5.5.0",
     "@ethersproject/providers": "^5.5.0",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-ganache": "^2.0.1",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@openzeppelin/contracts": "^4.3.2",
     "@typechain/ethers-v5": "^7.2.0",
     "@typechain/hardhat": "^2.3.1",
     "@types/chai": "^4.2.22",
@@ -81,7 +83,7 @@
     "prepublishOnly": "pinst --disable",
     "prettier": "prettier --config ./.prettierrc.yaml --write \"**/*.{js,json,md,sol,ts}\"",
     "prettier:check": "prettier --check --config ./.prettierrc.yaml \"**/*.{js,json,md,sol,ts}\"",
-    "test": "hardhat test",
+    "test": "hardhat test --network ganache",
     "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain"
   }
 }

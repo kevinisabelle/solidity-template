@@ -1536,6 +1536,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nomiclabs/hardhat-ganache@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@nomiclabs/hardhat-ganache@npm:2.0.1"
+  dependencies:
+    debug: ^4.1.1
+    ganache-core: ^2.7.0
+    ts-interface-checker: ^0.1.9
+  peerDependencies:
+    hardhat: ^2.0.0
+  checksum: 0a991bd1d713055f6f85b0c7e35cb96140c4e20246ff068b31ca44dc8d87e45a30339fd4e99b4cd956450e11b77537f268f16d4cc77a8c71bd5b5f40d5f44da8
+  languageName: node
+  linkType: hard
+
 "@nomiclabs/hardhat-waffle@npm:^2.0.1":
   version: 2.0.1
   resolution: "@nomiclabs/hardhat-waffle@npm:2.0.1"
@@ -1561,6 +1574,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@openzeppelin/contracts@npm:^4.3.2":
+  version: 4.3.2
+  resolution: "@openzeppelin/contracts@npm:4.3.2"
+  checksum: 9032453eef3e10b6453b667c7edd3381292665083b855ca8a8b5f64b473e768eacb53516865fb3ce1e493deadbb977069e483cce5650c42807a742ab59a18695
+  languageName: node
+  linkType: hard
+
 "@paulrberg/solidity-template@workspace:.":
   version: 0.0.0-use.local
   resolution: "@paulrberg/solidity-template@workspace:."
@@ -1574,7 +1594,9 @@ __metadata:
     "@ethersproject/bytes": ^5.5.0
     "@ethersproject/providers": ^5.5.0
     "@nomiclabs/hardhat-ethers": ^2.0.2
+    "@nomiclabs/hardhat-ganache": ^2.0.1
     "@nomiclabs/hardhat-waffle": ^2.0.1
+    "@openzeppelin/contracts": ^4.3.2
     "@typechain/ethers-v5": ^7.2.0
     "@typechain/hardhat": ^2.3.1
     "@types/chai": ^4.2.22
@@ -7388,7 +7410,7 @@ fsevents@~2.1.1:
   languageName: node
   linkType: hard
 
-"ganache-core@npm:^2.13.2":
+"ganache-core@npm:^2.13.2, ganache-core@npm:^2.7.0":
   version: 2.13.2
   resolution: "ganache-core@npm:2.13.2"
   dependencies:
@@ -14197,6 +14219,13 @@ resolve@1.1.x:
   bin:
     ts-generator: dist/cli/run.js
   checksum: 3add2e76afd7a4d9d9aee1ff26477ee4e8b4cc740b35787f9ea780c11aefc88e6c7833837eacc12b944c1883680639dc9cc47fe173eff95c62112f3a41132146
+  languageName: node
+  linkType: hard
+
+"ts-interface-checker@npm:^0.1.9":
+  version: 0.1.13
+  resolution: "ts-interface-checker@npm:0.1.13"
+  checksum: 20c29189c2dd6067a8775e07823ddf8d59a33e2ffc47a1bd59a5cb28bb0121a2969a816d5e77eda2ed85b18171aa5d1c4005a6b88ae8499ec7cc49f78571cb5e
   languageName: node
   linkType: hard
 
