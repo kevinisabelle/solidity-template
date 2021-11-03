@@ -3,8 +3,13 @@ import type { Artifact } from "hardhat/types";
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 
 import type { LiveEventTicket } from "../../types/LiveEventTicket";
+import type { LiveEventFactory } from "../../types/LiveEventFactory";
 import { Signers } from "../types";
-import { shouldBeCreateWithProperParameters, shouldBeAbleToMintTickets } from "./LiveEventTicket.behavior";
+import {
+  shouldBeCreateWithProperParameters,
+  shouldBeAbleToMintTickets,
+  createNewLiveEvent,
+} from "./LiveEventTicket.behavior";
 
 describe("Unit tests", function () {
   before(async function () {
@@ -12,24 +17,23 @@ describe("Unit tests", function () {
 
     const signers: SignerWithAddress[] = await ethers.getSigners();
     this.signers.admin = signers[0];
+    this.signers.concertCreator = signers[1];
+    this.signers.user1 = signers[2];
+    this.signers.user2 = signers[3];
   });
 
   describe("LiveEventTicketContract", function () {
     before(async function () {
       const LiveEventTicketContractArtifact: Artifact = await artifacts.readArtifact("LiveEventTicket");
-      this.liveEventTicketContract = <LiveEventTicket>(
-        await waffle.deployContract(this.signers.admin, LiveEventTicketContractArtifact, [
-          "My concert",
-          "Centre Bell",
-          [200, 100],
-          ["VIP", "Standard"],
-          [10, 150],
-          [true, false],
-        ])
+      const LiveEventFactoryArtifact: Artifact = await artifacts.readArtifact("LiveEventFactory");
+
+      this.liveEventFactoryContract = <LiveEventFactory>(
+        await waffle.deployContract(this.signers.admin, LiveEventFactoryArtifact, [])
       );
     });
 
-    shouldBeCreateWithProperParameters();
-    shouldBeAbleToMintTickets();
+    createNewLiveEvent();
+    // shouldBeCreateWithProperParameters();
+    // shouldBeAbleToMintTickets();
   });
 });
