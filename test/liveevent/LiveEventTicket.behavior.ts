@@ -80,12 +80,26 @@ export function concertCreatorPutTicketsForSell(): void {
 
 export function UserShouldBeAbleToBuyATicket(): void {
   it("user should be able to buy a ticket", async function () {
-    var event = await this.liveEventFactoryContract.connect(this.signers.user1).getEvent(this.signers.user1.address, 0);
+    var event = await this.liveEventFactoryContract
+      .connect(this.signers.user1)
+      .getEvent(this.signers.concertCreator.address, 0);
     this.liveEventTicketContract = LiveEventTicket__factory.connect(event, this.signers.user1);
 
-    await this.liveEventTicketContract.buyTicket(this.signers.concertCreator.address, 1, 0, { value: 200 });
+    var ticketsForSale = await this.liveEventTicketContract.getTicketsForSale();
+    var totalTicketsForSale = ticketsForSale.map(t => t.amount).reduce((a, p) => a.add(p));
+    expect(totalTicketsForSale).to.equal(110);
 
-    expect(this.liveEventTicketContract.balanceOf(this.signers.user1.address, 0)).to.equal(1);
+    var amount = await this.liveEventTicketContract.buyTicket(this.signers.concertCreator.address, 1, 0, {
+      value: 300,
+    });
+
+    var userAmount = await this.liveEventTicketContract.balanceOf(this.signers.user1.address, 0);
+
+    expect(userAmount).to.equal(1);
+
+    ticketsForSale = await this.liveEventTicketContract.getTicketsForSale();
+    totalTicketsForSale = ticketsForSale.map(t => t.amount).reduce((a, p) => a.add(p));
+    expect(totalTicketsForSale).to.equal(109);
   });
 }
 

@@ -107,7 +107,7 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
         address from,
         uint256 amount,
         uint256 categoryIndex
-    ) public payable {
+    ) public payable returns (uint256) {
         // Check that the from has the required amount of tickets
         console.log("Received buy ticket order");
 
@@ -120,13 +120,49 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
         require(ticketIndex > -1, "No tickets available to sell from this address");
         uint256 price = tickets.salePrice;
 
-        require(price == msg.value, "Sent amount must equal the sell price");
+        require(
+            price == msg.value,
+            append(append("Eth sent must equals the price: ", uint2str(msg.value)), uint2str(price))
+        );
 
         // Transfert value to ticket owner // Transfert tickets to destination
         // if (to == )
         _contractBalance += msg.value;
 
         _safeTransferFrom(from, msg.sender, categoryIndex, amount, stringToBytes("Buy ticket"));
+
+        ticketIndex = this.getTicketsForSaleIndex(from, categoryIndex);
+        // TicketForSale memory tickets = ;
+
+        toSell[uint256(ticketIndex)].amount -= amount;
+
+        return amount;
+    }
+
+    function append(string memory a, string memory b) internal pure returns (string memory) {
+        return string(abi.encodePacked(a, b));
+    }
+
+    function uint2str(uint256 _i) internal pure returns (string memory _uintAsString) {
+        if (_i == 0) {
+            return "0";
+        }
+        uint256 j = _i;
+        uint256 len;
+        while (j != 0) {
+            len++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(len);
+        uint256 k = len;
+        while (_i != 0) {
+            k = k - 1;
+            uint8 temp = (48 + uint8(_i - (_i / 10) * 10));
+            bytes1 b1 = bytes1(temp);
+            bstr[k] = b1;
+            _i /= 10;
+        }
+        return string(bstr);
     }
 
     // function getTicketPrice(address from, uint256 categoryIndex) private returns (TicketPrice ticketPrice) {}
