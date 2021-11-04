@@ -1,14 +1,12 @@
 import { artifacts, ethers, waffle } from "hardhat";
 import type { Artifact } from "hardhat/types";
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-
-import type { LiveEventTicket } from "../../types/LiveEventTicket";
 import type { LiveEventFactory } from "../../types/LiveEventFactory";
 import { Signers } from "../types";
 import {
-  shouldBeCreateWithProperParameters,
   shouldBeAbleToMintTickets,
   createNewLiveEvent,
+  concertCreatorPutTicketsForSell,
 } from "./LiveEventTicket.behavior";
 
 describe("Unit tests", function () {
@@ -24,7 +22,6 @@ describe("Unit tests", function () {
 
   describe("LiveEventTicketContract", function () {
     before(async function () {
-      const LiveEventTicketContractArtifact: Artifact = await artifacts.readArtifact("LiveEventTicket");
       const LiveEventFactoryArtifact: Artifact = await artifacts.readArtifact("LiveEventFactory");
 
       this.liveEventFactoryContract = <LiveEventFactory>(
@@ -33,7 +30,7 @@ describe("Unit tests", function () {
     });
 
     createNewLiveEvent();
-    // shouldBeCreateWithProperParameters();
-    // shouldBeAbleToMintTickets();
+    shouldBeAbleToMintTickets();
+    concertCreatorPutTicketsForSell();
   });
 });

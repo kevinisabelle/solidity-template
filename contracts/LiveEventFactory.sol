@@ -8,7 +8,7 @@ import "hardhat/console.sol";
 import "./LiveEventTicket.sol";
 
 contract LiveEventFactory {
-    mapping(address => LiveEventTicket) public liveEvents;
+    mapping(address => LiveEventTicket[]) public liveEvents;
 
     constructor() {}
 
@@ -29,6 +29,11 @@ contract LiveEventFactory {
             canBeResoldHigher
         );
 
-        liveEvents[msg.sender] = newEvent;
+        newEvent.transferOwnership(msg.sender);
+        liveEvents[msg.sender].push(newEvent);
+    }
+
+    function getEvent(address owner, uint256 index) public view returns (LiveEventTicket) {
+        return LiveEventTicket(address(liveEvents[owner][index]));
     }
 }

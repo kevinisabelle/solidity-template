@@ -18,12 +18,14 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
     uint256[] public _supplies;
 
     struct TicketForSale {
+        address seller;
+        uint256 category;
         uint256 salePrice;
         uint256 amount;
     }
 
     mapping(address => uint256) public tickerOwners;
-    mapping(address => mapping(uint256 => TicketForSale)) public toSell;
+    TicketForSale[] public toSell;
     mapping(address => uint256) public attendees;
 
     constructor(
@@ -72,21 +74,32 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
         uint256 userBalance = balanceOf(msg.sender, categoryIndex);
         require(userBalance > 0, "User has no ticket of this category");
 
-        TicketForSale memory tickets = toSell[msg.sender][categoryIndex];
+        int256 ticketsIndex = this.getTicketsForSaleIndex(msg.sender, categoryIndex);
 
-        // if (tickets.amount = 0) {}
-
-        uint256 qtyAlreadyForSale = tickets.amount;
-        uint256 availableToSell = userBalance - qtyAlreadyForSale;
-        require(availableToSell >= amount, "No more tickets to sell from this address");
+        if (ticketsIndex > -1) {
+            TicketForSale memory tickets = toSell[uint256(ticketsIndex)];
+            if (tickets.amount != 0) {
+                uint256 qtyAlreadyForSale = tickets.amount;
+                uint256 availableToSell = userBalance - qtyAlreadyForSale;
+                require(availableToSell >= amount, "No more tickets to sell from this address");
+            }
+        }
 
         // Validate sold price
         if (!_canBeResoldHigher[categoryIndex]) {
             require(price <= _prices[categoryIndex], "Cannot resell higher than the original price");
         }
 
-        toSell[msg.sender][categoryIndex].amount = amount;
-        toSell[msg.sender][categoryIndex].salePrice = price;
+        if (ticketsIndex == -1) {
+            TicketForSale memory tickets;
+            tickets.amount = amount;
+            tickets.salePrice = price;
+            tickets.seller = msg.sender;
+            toSell.push(tickets);
+        } else {
+            toSell[uint256(ticketsIndex)].amount += amount;
+            toSell[uint256(ticketsIndex)].salePrice = price;
+        }
     }
 
     // buy ticket
@@ -118,6 +131,34 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
         }
 
         return total;
+    }
+
+    function getTotalTicketsMinted() public view returns (uint256) {
+        uint256 total = 0;
+        for (uint256 i = 0; i < _supplies.length; i++) {
+            total += _supplies[i];
+        }
+
+        return total;
+    }
+
+    function getTicketsForSale() public view returns (TicketForSale[] memory) {
+        return toSell;
+    }
+
+    function getTicketsForSaleIndex(address seller, uint256 categoryIndex) public view returns (int256) {
+        int256 result = -1;
+
+        for (uint256 i = 0; i < toSell.length; i++) {
+            TicketForSale memory tickets = toSell[i];
+
+            if (tickets.category == categoryIndex && tickets.seller == seller) {
+                result = int256(i);
+                break;
+            }
+        }
+
+        return result;
     }
 
     // set attended to true
