@@ -75,8 +75,6 @@ export function concertCreatorPutTicketsForSell(): void {
     console.log("Tickets for sale: " + totalTicketsForSale);
 
     expect(totalTicketsForSale).to.equal(110);
-
-    // console.log(ticketsForSale);
   });
 }
 
