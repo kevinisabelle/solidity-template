@@ -7,6 +7,7 @@ import {
   shouldBeAbleToMintTickets,
   createNewLiveEvent,
   concertCreatorPutTicketsForSell,
+  UserShouldBeAbleToBuyATicket,
 } from "./LiveEventTicket.behavior";
 
 describe("Unit tests", function () {
@@ -32,5 +33,6 @@ describe("Unit tests", function () {
     createNewLiveEvent();
     shouldBeAbleToMintTickets();
     concertCreatorPutTicketsForSell();
+    UserShouldBeAbleToBuyATicket();
   });
 });

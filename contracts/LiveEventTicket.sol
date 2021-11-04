@@ -105,21 +105,28 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
     // buy ticket
     function buyTicket(
         address from,
-        address to,
         uint256 amount,
         uint256 categoryIndex
     ) public payable {
         // Check that the from has the required amount of tickets
-        require(balanceOf(from, categoryIndex) > 0, "No more tickets to sell from this address");
+        console.log("Received buy ticket order");
+
+        require(balanceOf(from, categoryIndex) > 0, "No tickets at this address");
 
         // Check that the ticket is for sell and get the price
+        int256 ticketIndex = this.getTicketsForSaleIndex(from, categoryIndex);
+        TicketForSale memory tickets = toSell[uint256(ticketIndex)];
 
-        // Transfert tickets to destination
+        require(ticketIndex > -1, "No tickets available to sell from this address");
+        uint256 price = tickets.salePrice;
 
-        // Transfert value to ticket owner
+        require(price == msg.value, "Sent amount must equal the sell price");
+
+        // Transfert value to ticket owner // Transfert tickets to destination
         // if (to == )
+        _contractBalance += msg.value;
 
-        _safeTransferFrom(from, to, categoryIndex, amount, stringToBytes("Buy ticket"));
+        _safeTransferFrom(from, msg.sender, categoryIndex, amount, stringToBytes("Buy ticket"));
     }
 
     // function getTicketPrice(address from, uint256 categoryIndex) private returns (TicketPrice ticketPrice) {}

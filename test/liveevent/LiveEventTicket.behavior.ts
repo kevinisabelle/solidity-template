@@ -78,8 +78,15 @@ export function concertCreatorPutTicketsForSell(): void {
   });
 }
 
-export function buyATicket(): void {
-  it("should create a new event", async function () {});
+export function UserShouldBeAbleToBuyATicket(): void {
+  it("user should be able to buy a ticket", async function () {
+    var event = await this.liveEventFactoryContract.connect(this.signers.user1).getEvent(this.signers.user1.address, 0);
+    this.liveEventTicketContract = LiveEventTicket__factory.connect(event, this.signers.user1);
+
+    await this.liveEventTicketContract.buyTicket(this.signers.concertCreator.address, 1, 0, { value: 200 });
+
+    expect(this.liveEventTicketContract.balanceOf(this.signers.user1.address, 0)).to.equal(1);
+  });
 }
 
 export function resellTickets(): void {
