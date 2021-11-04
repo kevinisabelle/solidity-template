@@ -121,8 +121,8 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
         uint256 price = tickets.salePrice;
 
         require(
-            price == msg.value,
-            append(append("Eth sent must equals the price: ", uint2str(msg.value)), uint2str(price))
+            price * amount == msg.value,
+            append(append("Eth sent must equals the price x quantity: ", uint2str(msg.value)), uint2str(price * amount))
         );
 
         // Transfert value to ticket owner // Transfert tickets to destination
@@ -211,12 +211,11 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
 
     // transfert ownership
     function transfertTicket(
-        address from,
         address to,
         uint256 category,
         uint256 amount
     ) public {
-        _safeTransferFrom(from, to, category, amount, stringToBytes("Transfert ticket"));
+        _safeTransferFrom(msg.sender, to, category, amount, stringToBytes("Transfert ticket"));
     }
 
     function stringToBytes(string memory s) public pure returns (bytes memory) {
