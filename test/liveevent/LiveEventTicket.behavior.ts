@@ -40,7 +40,7 @@ export function shouldBeAbleToMintTickets(): void {
     expect(ticketsCount).to.equal(160);
     expect(mintedTickets).to.equal(160);
 
-    expect(this.liveEventTicketContract.mintTickets()).to.throw("revert No more tickets to mint");
+    await expect(this.liveEventTicketContract.mintTickets()).to.be.revertedWith("No more tickets to mint");
   });
 }
 
