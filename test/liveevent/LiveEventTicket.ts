@@ -4,10 +4,13 @@ import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signe
 import type { LiveEventFactory } from "../../types/LiveEventFactory";
 import { Signers } from "../types";
 import {
-  shouldBeAbleToMintTickets,
-  createNewLiveEvent,
-  concertCreatorPutTicketsForSell,
+  ShouldBeAbleToMintTickets,
+  CreateNewLiveEvent,
+  ConcertCreatorPutTicketsForSell,
   UserShouldBeAbleToBuyATicket,
+  User1ResellTicketToUser2,
+  UsersAttendEvent,
+  ConcertCreatorRetrieveFundsAfterEvent,
 } from "./LiveEventTicket.behavior";
 
 describe("Unit tests", function () {
@@ -30,9 +33,12 @@ describe("Unit tests", function () {
       );
     });
 
-    createNewLiveEvent();
-    shouldBeAbleToMintTickets();
-    concertCreatorPutTicketsForSell();
+    CreateNewLiveEvent();
+    ShouldBeAbleToMintTickets();
+    ConcertCreatorPutTicketsForSell();
     UserShouldBeAbleToBuyATicket();
+    User1ResellTicketToUser2();
+    UsersAttendEvent();
+    ConcertCreatorRetrieveFundsAfterEvent();
   });
 });

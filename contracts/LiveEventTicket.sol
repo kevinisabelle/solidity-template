@@ -24,7 +24,7 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
         uint256 amount;
     }
 
-    mapping(address => uint256) public tickerOwners;
+    // mapping(address => uint256) public tickerOwners;
     TicketForSale[] public toSell;
     mapping(address => uint256) public attendees;
 
@@ -104,10 +104,10 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
 
     // buy ticket
     function buyTicket(
-        address from,
+        address payable from,
         uint256 amount,
         uint256 categoryIndex
-    ) public payable returns (uint256) {
+    ) public payable {
         // Check that the from has the required amount of tickets
         console.log("Received buy ticket order");
 
@@ -126,8 +126,12 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
         );
 
         // Transfert value to ticket owner // Transfert tickets to destination
-        // if (to == )
-        _contractBalance += msg.value;
+        if (from == this.owner()) {
+            _contractBalance += msg.value;
+        } else {
+            bool sent = from.send(msg.value);
+            require(sent, "Failed to send Ether");
+        }
 
         _safeTransferFrom(from, msg.sender, categoryIndex, amount, stringToBytes("Buy ticket"));
 
@@ -135,8 +139,6 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
         // TicketForSale memory tickets = ;
 
         toSell[uint256(ticketIndex)].amount -= amount;
-
-        return amount;
     }
 
     function append(string memory a, string memory b) internal pure returns (string memory) {
@@ -205,9 +207,18 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
     }
 
     // set attended to true
-    // function attendEvent() public {
-    // msg.sender
-    // }
+    function attendEvent(uint256 categoryIndex) public {
+        // Check user has a proper ticket for the category
+
+        uint256 userBalance = balanceOf(msg.sender, categoryIndex);
+        require(userBalance > 0, "User has no ticket of this category");
+
+        attendees[msg.sender] += 1;
+    }
+
+    function getAttendanceCount() public view returns (uint256) {
+        return attendees[msg.sender];
+    }
 
     // transfert ownership
     function transfertTicket(
